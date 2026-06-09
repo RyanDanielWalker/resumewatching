@@ -58,11 +58,11 @@ GITHUB_PAGES=true npm run build      # produces ./out
 
 ## Step 4 — Publish `out/` to the `gh-pages` branch
 
-`.nojekyll` is required — without it GitHub ignores Next's `_next/` folder and the site breaks.
+`.nojekyll` is required (without it GitHub ignores Next's `_next/` folder and the site breaks).
+It now lives in `public/.nojekyll`, so every build copies it into `out/` automatically — no manual step.
 
 ```bash
-touch out/.nojekyll
-npx gh-pages -d out -t true          # -t includes dotfiles like .nojekyll
+npx gh-pages -d out -t                # -t (--dotfiles) includes dotfiles like .nojekyll
 ```
 
 This creates/updates the `gh-pages` branch on your `origin` and pushes it.
@@ -94,8 +94,7 @@ Send that URL to QA.
 ```bash
 git add -A && git commit -m "..." && git push       # update main
 GITHUB_PAGES=true npm run build
-touch out/.nojekyll
-npx gh-pages -d out -t true                           # republish
+npx gh-pages -d out -t                                # republish
 ```
 
 The live site updates within ~1 minute.
