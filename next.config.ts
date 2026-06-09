@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  transpilePackages: ["@viewlift/player", "@viewlift/player-backup"],
 };
 
 export default nextConfig;
