@@ -34,7 +34,9 @@ export default function Home() {
   const [watchLogs, setWatchLogs] = useState<{ time: string; data: unknown }[]>([]);
   const logsEndRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<HTMLVideoElement>(null);
-  const playerCoreRef = useRef<ReturnType<typeof import("@viewlift/player-backup/esm")["default"]> | null>(null);
+  const playerCoreRef = useRef<
+    (ReturnType<typeof import("@viewlift/player-backup/esm")["default"]> & { destroy?: () => void }) | null
+  >(null);
 
   const destroyPlayer = () => {
     try { playerCoreRef.current?.destroy?.(); } catch (_) {}
