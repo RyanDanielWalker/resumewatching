@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { isExternal } from "util/types";
 
 type Tab = "Config-Based" | "Direct Source";
 type Skin = "VL_ONE" | "VL_TWO" | "VL_THREE";
@@ -19,6 +18,13 @@ export default function Home() {
   const [token, setToken] = useState("");
   const [apiBaseUrl, setApiBaseUrl] = useState("https://chsn.staging.api.viewlift.com/v3");
   const [seekTo, setSeekTo] = useState("");
+
+  // Watch-history config — QA-adjustable; defaults match the original config values.
+  const [whEnable, setWhEnable] = useState(true);
+  const [whIsExternal, setWhIsExternal] = useState(true);
+  const [whInterval, setWhInterval] = useState("30");
+  const [whCompletionThreshold, setWhCompletionThreshold] = useState("95");
+  const [whWatchedPercentage, setWhWatchedPercentage] = useState("40");
 
   const [sourceUrl, setSourceUrl] = useState("");
   const [mimeType, setMimeType] = useState("");
@@ -69,12 +75,12 @@ export default function Home() {
         ...(playButtonBgColor && { playButtonBgColor }),
         ...(playButtonType && { playButtonType }),
         watchHistory: {
-          enable: true,
-          interval: 30,
-          completionThreshold: 95,
-          isExternal:true,
+          enable: whEnable,
+          interval: whInterval ? parseFloat(whInterval) : 30,
+          completionThreshold: whCompletionThreshold ? parseFloat(whCompletionThreshold) : 95,
+          isExternal: whIsExternal,
           watchedTime: seekTo ? parseFloat(seekTo) : 0,
-          watchedPercentage: 40,
+          watchedPercentage: whWatchedPercentage ? parseFloat(whWatchedPercentage) : 40,
           cb: (data: unknown) => {
             console.log("watch-history", data);
             const time = new Date().toLocaleTimeString();
@@ -203,6 +209,20 @@ export default function Home() {
                   watchHistory.watchedTime = {parseFloat(seekTo) || 0}s
                 </p>
               )}
+            </Card>
+
+            {/* Watch History card */}
+            <Card>
+              <CardTitle icon="📊">Watch History</CardTitle>
+              <div className="space-y-3">
+                <Toggle label="enable" checked={whEnable} onChange={setWhEnable} />
+                <Toggle label="isExternal" checked={whIsExternal} onChange={setWhIsExternal} />
+                <div className="grid grid-cols-3 gap-3">
+                  <DarkField label="Interval (s)" value={whInterval} onChange={setWhInterval} placeholder="30" />
+                  <DarkField label="Completion %" value={whCompletionThreshold} onChange={setWhCompletionThreshold} placeholder="95" />
+                  <DarkField label="Watched %" value={whWatchedPercentage} onChange={setWhWatchedPercentage} placeholder="40" />
+                </div>
+              </div>
             </Card>
 
             {/* Appearance card */}
@@ -371,6 +391,35 @@ function CardTitle({ icon, children }: { icon: string; children: React.ReactNode
     <div className="flex items-center gap-2">
       <span className="text-base">{icon}</span>
       <h2 className="text-sm font-bold text-white/80 uppercase tracking-widest">{children}</h2>
+    </div>
+  );
+}
+
+function Toggle({
+  label, checked, onChange,
+}: {
+  label: string;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+}) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-xs font-medium text-white/50 font-mono">{label}</span>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        onClick={() => onChange(!checked)}
+        className={`relative w-10 h-5 rounded-full transition-colors duration-200 ${
+          checked ? "bg-violet-500" : "bg-white/15"
+        }`}
+      >
+        <span
+          className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200 ${
+            checked ? "translate-x-5" : ""
+          }`}
+        />
+      </button>
     </div>
   );
 }
