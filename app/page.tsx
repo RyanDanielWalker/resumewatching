@@ -137,7 +137,7 @@ export default function Home() {
           </div>
           <span className="text-white font-semibold tracking-wide text-sm">Player SDK Playground</span>
           <span className="ml-1 px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 text-xs font-mono border border-violet-500/30">
-            v2.1.13
+            v{process.env.NEXT_PUBLIC_PLAYER_BACKUP_VERSION || "unknown"}
           </span>
         </div>
         <div className="flex items-center gap-2 text-xs text-white/40">
@@ -155,7 +155,7 @@ export default function Home() {
           {/* Panel header */}
           <div className="px-7 pt-7 pb-4">
             <h1 className="text-xl font-bold text-white tracking-tight">Configure Player</h1>
-            <p className="text-xs text-white/40 mt-1">@2.0.204-backup</p>
+            <p className="text-xs text-white/40 mt-1">@{process.env.NEXT_PUBLIC_PLAYER_BACKUP_VERSION || "unknown"}</p>
           </div>
 
           <div className="px-7 pb-7 space-y-6">
